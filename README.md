@@ -257,7 +257,7 @@ Right now our simple Express application is just sending back a string of conten
 
 We're going to use Ejs for creating our views. Ejs, a templating language, allows us to write HTML with inline variables that we can fill in with data from our application. That means, we can have the following handlebars template:
 
-```hbs
+```ejs
 <h1>Hello <%= name %></h1>
 ```
 
@@ -286,6 +286,7 @@ $ npm install express-ejs-layouts
 In `index.js`, let's [configure our express app](https://expressjs.com/en/guide/using-template-engines.html) to use Handlebars as its "view engine". Put this below the requires, but above the routes.
 
 ```js
+app.use(expressLayouts);
 app.set('view engine', 'ejs')
 ```
 
@@ -293,8 +294,8 @@ Let's go ahead and create a directory that will contain our templates in the roo
 
 ```bash
 $ mkdir views
-$ touch views/index.hbs
-$ touch views/layout.hbs
+$ touch views/index.ejs
+$ touch views/layout.ejs
 ```
 
 Let's change up our existing `index.js` to utilize a template rather than sending in a string directly. In `index.js`:
@@ -312,7 +313,7 @@ The `.render` method takes two arguments:
   1. The name of the view we want to render
   2. An object with values that will be made available in the view
 
-The only problem is our view is empty! Let's go ahead and change that now. In `views/layouts.hbs`:
+The only problem is our view is empty! Let's go ahead and change that now. In `views/layouts.ejs`:
 
 ```html
 <!DOCTYPE html>
