@@ -255,10 +255,10 @@ Where else have we seen these kinds of dynamic segments in routes?
 
 Right now our simple Express application is just sending back a string of content, instead of an entire HTML file. As we're building complex applications we need to be able to dynamically create entire HTML pages, something Express makes simple with **views**.
 
-We're going to use Handlebars for creating our views. Handlebars, a templating language, allows us to write HTML with inline variables that we can fill in with data from our application. That means, we can have the following handlebars template:
+We're going to use Ejs for creating our views. Ejs, a templating language, allows us to write HTML with inline variables that we can fill in with data from our application. That means, we can have the following handlebars template:
 
 ```hbs
-<h1>Hello {{name}}</h1>
+<h1>Hello <%= name %></h1>
 ```
 
 And in our Express app, pass in an object that sets the `name` property. Whatever value is in our `name` property will be output in our HTML!
@@ -278,13 +278,15 @@ If we visit `http://localhost:4000/Whiskers`, then the HTML we would get back wo
 Let's set up our Express app to use Handlebars. We first need to install it as a project dependency:
 
 ```bash
-$ npm install hbs
+$ npm install ejs
+$ npm install express-ejs-layouts
+
 ```
 
 In `index.js`, let's [configure our express app](https://expressjs.com/en/guide/using-template-engines.html) to use Handlebars as its "view engine". Put this below the requires, but above the routes.
 
 ```js
-app.set('view engine', 'hbs')
+app.set('view engine', 'ejs')
 ```
 
 Let's go ahead and create a directory that will contain our templates in the root directory of the Hello World application. In the terminal:
@@ -319,19 +321,19 @@ The only problem is our view is empty! Let's go ahead and change that now. In `v
     <title>Express Intro</title>
   </head>
   <body>
-   {{{body}}}
+    <%- body %>
   </body>
 </html>
 ```
 
-Notice the `{{{body}}}` syntax. This is because Handlebars by default escapes HTML and you need the additional set of brackets to indicate that you want to render the tags in the body as HTML.
+Notice the  `<% %>` syntax.
 
 This allows us to utilize files in that folder in the layout.
 
-Finally we should update our index view to reflect the same strings we had before. In `views/index.hbs`:
+Finally we should update our index view to reflect the same strings we had before. In `views/index.ejs`:
 
 ```html
-<h1>Hello {{name}}</h1>
+<h1>Hello <%= name %></h1>
 ```
 
 Start your server back up using `nodemon index.js`, and refresh your page to see it render.
@@ -368,10 +370,10 @@ app.get('/', (req, res) => {
 ```
 
 Now, we'll create a welcome file at the command line:
-`touch views/welcome.hbs`
+`touch views/welcome.ejs`
 
 ```html
-<!-- views/welcome.hbs -->
+<!-- views/welcome.ejs -->
 <h1>Hello World</h1>
 <form action="/" method="post">
   <label for="name">Please enter your name</label>
@@ -450,10 +452,10 @@ app.post('/', (req, res) => {
 })
 ```
 
-And to our view in `index.hbs`:
+And to our view in `index.ejs`:
 
 ```html
-<h1>Hello {{name}}</h1>
+<h1>Hello <%= name %></h1>
 ```
 
 ## Closing
