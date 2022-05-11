@@ -259,91 +259,357 @@ Where else have we seen these kinds of dynamic segments in routes?
 
 ### Views
 
-Right now our simple Express application is just sending back a string of content, instead of an entire HTML file. As we're building complex applications we need to be able to dynamically create entire HTML pages, something Express makes simple with **views**.
+------------------------------------------------------------------------------------------------------------
 
-We're going to use Ejs for creating our views. Ejs, a templating language, allows us to write HTML with inline variables that we can fill in with data from our application. That means, we can have the following handlebars template:
+---
+#### Ways to Respond to a Request
+<br>
 
-```ejs
-<h1>Hello <%= name %></h1>
-```
+- So far we have responded in our route handler (callback) code by using the `res.send` method.
 
-And in our Express app, pass in an object that sets the `name` property. Whatever value is in our `name` property will be output in our HTML!
+- The [Express docs for the Response object](https://expressjs.com/en/4x/api.html#res) explains the other ways to respond to the HTTP request.
 
-```js
-app.get('/:name', function(req, res) {
-  res.render('templateName', { name: req.params.name })
-})
-```
+- Here are the methods we'll use the most:
+  - `res.render()` - Render a view template and send the resulting HTML to the browser.
+  - `res.redirect()` -	Tell the browser to issue another `GET` request.
+  - `res.json()` - Send a JSON response (used when we communicate via AJAX).
 
-If we visit `http://localhost:4000/Whiskers`, then the HTML we would get back would be:
+---
+#### Rendering Views
+<br>
 
-```html
-<h1>Hello Whiskers</h1>
-```
+- Another of the three fundamental capabilities of a web framework is to be able to use a view engine to render templates.
 
-Let's set up our Express app to use Handlebars. We first need to install it as a project dependency:
+- A template can include a mixture of static HTML and "code" that generates HTML dynamically.
 
-```bash
-$ npm install ejs
-$ npm install express-ejs-layouts
+- For example, code in a template could generate a series of `<li>` elements for data provided to it in an array.
 
-```
+---
+#### Rendering Views
+<br>
 
-In `index.js`, let's [configure our express app](https://expressjs.com/en/guide/using-template-engines.html) to use Handlebars as its "view engine". Put this below the requires, but above the routes.
+- In Express, we use `res.render` to process a template using a _view engine_ and return the resulting HTML to the browser.
 
-```js
-app.use(expressLayouts);
-app.set('view engine', 'ejs')
-```
+- Express can work with a multitude of _view engines_.
 
-Let's go ahead and create a directory that will contain our templates in the root directory of the Hello World application. In the terminal:
+- [`Pug`](https://pugjs.org/api/getting-started.html) (formerly `Jade`) is a template language that leverages indentation to create HTML with a "shorthand" syntax.
 
-```bash
-$ mkdir views
-$ touch views/index.ejs
-$ touch views/layout.ejs
-```
+- However, [`EJS`](https://www.npmjs.com/package/ejs) (Embedded JavaScript) templates are sweet like bear meat!
 
-Let's change up our existing `index.js` to utilize a template rather than sending in a string directly. In `index.js`:
+---
+#### Rendering Views
+<br>
 
-```js
-app.get('/:name', function(req, res) {
-  res.render('index', { name: req.params.name })
-})
-```
+- Let's use EJS to render a `home` view for the existing `GET /home` route.
 
-Instead of directly building a string as the response to that `GET` request, we want to render a view using Handlebars.
+- Express applications are usually architected using the MVC design pattern, so we will put all view templates inside of a `views` folder:
 
-The `.render` method takes two arguments:
+	```sh
+	$ mkdir views
+	$ touch views/home.ejs
+	```
 
-  1. The name of the view we want to render
-  2. An object with values that will be made available in the view
+- `ejs` is the file extension for the EJS view engine.
 
-The only problem is our view is empty! Let's go ahead and change that now. In `views/layouts.ejs`:
+---
+#### Rendering Views
+<br>
 
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Express Intro</title>
-  </head>
-  <body>
-    <%- body %>
-  </body>
-</html>
-```
+- Open `home.ejs` then type `!` and press tab to generate the HTML boilerplate:
 
-Notice the  `<% %>` syntax.
+	```html
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+	    <meta charset="UTF-8">
+	    <meta name="viewport" 
+	    	content="width=device-width, initial-scale=1.0">
+	    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	    <title>First Express</title>
+	</head>
+	<body>
+	    
+	</body>
+	</html>
+	```
 
-This allows us to utilize files in that folder in the layout.
+---
+#### Rendering Views
+<br>
 
-Finally we should update our index view to reflect the same strings we had before. In `views/index.ejs`:
+- For now, we will need to include the HTML boilerplate inside of every view.
 
-```html
-<h1>Hello <%= name %></h1>
-```
+- EJS includes the ability to make our views more DRY by using _partial views_.
 
-Start your server back up using `nodemon index.js`, and refresh your page to see it render.
+- We will cover partial views later, however, if you want to check them out before then, check out the `include` function [here](https://www.npmjs.com/package/ejs#includes). 
+
+
+---
+#### Rendering Views
+<br>
+
+- Let's add an `<h1>` inside the `<body>` so that we see something :)
+
+	```html
+	<body>
+  		<h1>Home Page</h1>
+	</body>
+	```
+
+---
+#### Rendering Views
+<br>
+
+- Okay, now let's refactor the `GET /home` route's callback to render our new `home.ejs` template:
+
+	```js
+	app.get('/home', function(req, res) {
+  		res.render('home');
+	});
+	```
+
+- Just the file name, not the `ejs` extension.
+
+- Browse to `localhost:3000/home` and - it doesn'twork...
+
+---
+#### Rendering Views
+
+- We're going to get a little practice reading Express errors in this lesson.
+
+- The Express error _Error: No default engine was specified..._, makes it clear that we need to specify a view engine.
+
+- This is our first opportunity to configure our app:
+
+	```js
+	// Configure the app (app.set)
+	app.set('view engine', 'ejs');
+	```
+
+- The `app.set` method is used to configure an Express app's settings...
+
+---
+#### Rendering Views
+<br>
+
+- We also need to tell Express **where** all of our views can be found:
+
+	```js
+	// Configure the app (app.set)
+	app.set('view engine', 'ejs');
+	app.set('views', path.join(__dirname, 'views'));
+	```
+
+- Don't be intimidated by this code:<br>`path.join(__dirname, 'views')`...
+
+---
+#### Rendering Views
+<br>
+
+- `path.join` is just a Node method that builds a properly formatted path from segment strings passed to it. `__dirname` is always available and represents the path of the current folder where the currently running code lives; and `views` is the name of the folder we created to hold our views.
+
+- `path` is a core Node module, but it still must be required before we can use it...
+
+---
+#### Rendering Views
+<br>
+
+- Core Node modules don't have to be installed with `npm install`, but we do have to `require` them:
+
+	```js
+	// Require modules
+	const express = require('express');
+	const path = require('path');
+	```
+
+- Refresh and let's see what the next error is...
+
+---
+#### Rendering Views
+<br>
+
+- _Error: Cannot find module 'ejs'_ - this error is telling us that we need to install the EJS view engine package:
+
+	```sh
+	$ npm i ejs
+	```
+
+- We don't need to `require` the view engine - Express knows how to find it.
+
+- Refresh the page - success!
+
+---
+#### Dynamic Templating Using EJS
+<br>
+
+- Again, view engines are used to dynamically generate HTML on the server before sending it to the client.
+
+- We just used the `render` method, passing in the view name as an argument.
+
+- We can also pass in a JavaScript **object** as a second argument, and all of its properties will be accessible in the view within `ejs` tags!
+
+---
+#### Dynamic Templating Using EJS
+<br>
+
+- Let's say we want to render a list of To Dos.
+
+- Normally, the To Dos would be coming from a database, however, we'll "fake" a DB by putting the To Dos in a module and export a method to return them.
+
+- Do this to set up the module:
+
+	```sh
+	$ mkdir data
+	$ touch data/todo-db.js
+	```
+	
+- Next up, put code in the module...
+
+---
+#### Dynamic Templating Using EJS
+<br>
+
+- In the spirit of saving time, copy/paste the following inside of `todo-db.js`, then we'll review the code:
+
+	```js
+	const todos = [
+	  {todo: 'Feed Dogs', done: true},
+	  {todo: 'Learn Express', done: false},
+	  {todo: 'Buy Milk', done: false}
+	];
+	
+	module.exports = {
+	  getAll: function() {
+	    return todos;
+	  }
+	};
+	```
+
+---
+#### Dynamic Templating Using EJS
+<br>
+
+- To access our To Do "database", we need to `require` it inside of **server.js**:
+
+	```js
+	const path = require('path');
+	
+	// require the todo "database"
+	const todoDb = require('./data/todo-db');
+	```
+
+- Now let's add another route responsible for displaying the list of To Do's...
+
+---
+#### Dynamic Templating Using EJS
+<br>
+
+- Add this new route:
+
+	```js
+	app.get('/todos', function(req, res) {
+	  res.render('todos/index', {
+	    todos: todoDb.getAll()
+	  });
+	});
+	```
+	
+- Again, to pass data to a view, we pass an object as a second argument to `render`.
+
+- We should now be able to access a `todos` variable in the `todos/index` view...
+
+---
+#### Dynamic Templating Using EJS
+<br>
+
+- It's a best practice to group views related to a data resource (in this case **To Dos**) in their own folder.
+
+- We also commonly use `index` as a name for views, etc. used for **all** of something - in this case, displaying all To Dos.
+
+- Therefore, we need an `index.ejs` view inside of a `views/todos` folder:
+
+	```sh
+	$ mkdir views/todos
+	$ touch views/todos/index.ejs
+	```
+
+---
+#### Dynamic Templating Using EJS
+<br>
+
+- Now let's code the `todos/index.ejs` view. Start by copying over the HTML from `home.ejs` and fix it up to look like this:
+
+	```html
+	<body>
+	  <h1>Todos</h1>
+	  <ul>
+	    <% todos.forEach(function(t) { %>
+	      <li>
+	        <%= t.todo %>
+	          - 
+	        <%= t.done ? 'done' : 'not done' %>
+	      </li>
+	    <% }); %>
+	  </ul>
+	</body>
+	```
+
+---
+#### Dynamic Templating Using EJS
+<br>
+
+- That my friends is embedded JavaScript between those `<% %>` and `<%= %>` tags and I believe you are going to love their simplicity!
+
+- The `<% %>` EJS tags are for executing JavaScript such as control flow.
+
+- The `<%= %>` EJS tags are for writing JS expressions into the HTML page.
+
+- Refresh and browse to `localhost:3000/todos` - yeah!
+
+---
+#### Redirecting
+<br>
+
+- One last trick for the day...
+
+- Currently, if we browse to the root route, we see<br>"Hello Express", however...
+
+- We can use the `res.redirect` method to redirect to `GET /home` so that we will see the Home page upon browsing to the app...
+
+---
+#### Redirecting
+<br>
+
+- Refactor the root route as follows:
+
+	```js
+	app.get('/', function(req, res) {
+	  res.redirect('/home');
+	});
+	```
+
+- Redirects tell the browser to make a new `GET` request to the provided `path`.
+
+- Later, when we  start creating, updating, or deleting data, we will always perform a `redirect`.
+
+---
+#### ❓ Essential Questions
+<br>
+
+Review briefly, then on with the picker:
+
+1. **When we define routes in a web app, we are mapping HTTP requests to ________.**
+
+2. **What method do we call to render a view and on what object does that method exist?**
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## You Do: 99 Bottles of Beer
 
