@@ -137,7 +137,7 @@ These are the core features of Express.
 
 ### Getting Started
 
-Building our first server is pretty straightforward. Create an `index.js` file and write the following inside of it:
+Building our first server is pretty straightforward. Create an `server.js` file and write the following inside of it:
 
 ```js
 const express = require("express")
@@ -151,7 +151,7 @@ app.listen(4000, () => {
 To start up our server, we just need to execute this file with node:
 
 ```sh
-node index.js
+node server.js
 ```
 
 What's going on here?
@@ -160,7 +160,7 @@ What's going on here?
 - we're invoking the module, instantiating a constant app which holds all the methods and state we use to write and run our web app
 - we're starting our server (and app) by listening on port 4000 for incoming requests
 
-When we run the application from the terminal, `node index.js`, we can see app listening on port 4000 printed to the terminal. The process continues to run, occupying the shell until we hit ctrl + c.
+When we run the application from the terminal, `node server.js`, we can see app listening on port 4000 printed to the terminal. The process continues to run, occupying the shell until we hit ctrl + c.
 
 If we visit `http://localhost:4000` in the browser, we'll see something like this:
 
@@ -178,7 +178,7 @@ A *route* is a URI (path) and an HTTP method. The path is part of the URL, so if
 
 Express contains a function for each HTTP method which in turn accepts a path as the first argument then some number of callback functions. We'll start with just one callback function.
 
-Let's update `index.js`. Add this above `app.listen()`
+Let's update `server.js`. Add this above `app.listen()`
 
 ```js
 app.get('/', (request, response) => {
@@ -239,7 +239,7 @@ Install the nodemon package with `npm i nodemon --save`, or with the shorthand `
 We start up our application a bit differently now:
 
 ```sh
-nodemon index.js
+nodemon server.js
 ```
 
 #### Params in Express
@@ -248,7 +248,7 @@ How do we make our routes dynamic? Using parameters!
 
 Route parameters give us flexibility when writing routes in Express.
 
-Let's update `index.js` to include:
+Let's update `server.js` to include:
 
 ```js
 app.get('/:name', (req, res) => {
