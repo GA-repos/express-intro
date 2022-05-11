@@ -47,7 +47,7 @@ HTTP is a **protocol** which establishes the rules for communication over the We
 
 The process of a client sending a HTTP request, and server responding is known as the **HTTP Request/Response Cycle**:
 
-	<img src="https://i.imgur.com/Iqsj9gF.png" style="width:80%">
+<img src="https://i.imgur.com/Iqsj9gF.png" style="width:80%">
 
 Requests always have these three parts:
 
@@ -64,7 +64,7 @@ Responses in turn always have these three parts:
 
 When we browse to a website by typing in the address bar, this is what happens:
 
-	<img src="https://i.imgur.com/JDFHoZl.png" style="width:80%">
+<img src="https://i.imgur.com/JDFHoZl.png" style="width:80%">
 
 
 Clients make requests to a location (called a URL) using a method.
