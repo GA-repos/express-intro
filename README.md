@@ -259,8 +259,6 @@ Where else have we seen these kinds of dynamic segments in routes?
 
 ### Views
 
-------------------------------------------------------------------------------------------------------------
-
 ---
 #### Ways to Respond to a Request
 <br>
@@ -593,6 +591,14 @@ Where else have we seen these kinds of dynamic segments in routes?
 - Later, when we  start creating, updating, or deleting data, we will always perform a `redirect`.
 
 ---
+
+## You Do: 99 Bottles of Beer
+
+In the time remaining, work through building out an app for the song 99 Bottles of Beer.
+
+The instructions for this exercise can be found [here](https://git.generalassemb.ly/Flex-322/99_bottles_express-).
+
+---
 #### ❓ Essential Questions
 <br>
 
@@ -601,21 +607,6 @@ Review briefly, then on with the picker:
 1. **When we define routes in a web app, we are mapping HTTP requests to ________.**
 
 2. **What method do we call to render a view and on what object does that method exist?**
-
-
-
-
-
-
-
-
-------------------------------------------------------------------------------------------------------------------------------------------------
-
-## You Do: 99 Bottles of Beer
-
-In the time remaining, work through building out an app for the song 99 Bottles of Beer.
-
-The instructions for this exercise can be found [here](https://git.generalassemb.ly/Flex-322/99_bottles_express-).
 
 
 ## Closing
