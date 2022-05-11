@@ -39,9 +39,15 @@ The Web follows a model of communication called `client-server`. In the context 
 
 The client and server communicate using Hypertext Transfer Protocol (HTTP) and the `request-response` cycle.
 
+<img src="https://i.imgur.com/clxiqnO.png" style="width:80%">
+
 ### HTTP
 
 HTTP is a **protocol** which establishes the rules for communication over the Web. HTTP dictates how the client requests information from a server and how the server responds. Each message is similarly formatted - so you can think of them as like electronic telegrams.
+
+The process of a client sending a HTTP request, and server responding is known as the **HTTP Request/Response Cycle**:
+
+	<img src="https://i.imgur.com/Iqsj9gF.png" style="width:80%">
 
 Requests always have these three parts:
 
@@ -54,6 +60,12 @@ Responses in turn always have these three parts:
 1. Status (a status code indicating how the request was handled)
 1. Response header (additional information about the response)
 1. Body message (optional - an html document, JSON, XML)
+
+
+When we browse to a website by typing in the address bar, this is what happens:
+
+	<img src="https://i.imgur.com/JDFHoZl.png" style="width:80%">
+
 
 Clients make requests to a location (called a URL) using a method.
 
@@ -80,6 +92,9 @@ The status codes are also defined by the protocol:
 | 3xx | Redirection | 301 Moved Permanently |
 | 4xx | Client Errors | 404 Not Found |
 | 5xx | Server Errors | 500 Internal Server Error |
+
+
+<img src="https://i.imgur.com/fuED3VM.png" style="width:80%">
 
 #### How does it actually work
 
